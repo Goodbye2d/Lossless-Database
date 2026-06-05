@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const loginSection = document.getElementById('login-section');
     const formSection = document.getElementById('form-section');
     const statusSection = document.getElementById('status-section');
+    const loginLimitBanner = document.getElementById('login-limit-banner');
+    const limitBarProgress = document.getElementById('limit-bar-progress');
+    const limitStatusText = document.getElementById('limit-status-text');
     
     const loginBtn = document.getElementById('login-btn');
     const logoutBtn = document.getElementById('logout-btn');
@@ -105,10 +108,35 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function showLoginView() {
+    async function showLoginView() {
         formSection.style.display = 'none';
         statusSection.style.display = 'none';
         loginSection.style.display = 'block';
+        await checkLoginLimitStatus();
+    }
+
+    async function checkLoginLimitStatus() {
+        try {
+            let statusUrl = '/api/auth/status';
+            if (window.location.protocol === 'file:') {
+                statusUrl = 'https://canvas.echomusic.fun/api/auth/status';
+            }
+            const res = await fetch(statusUrl);
+            if (!res.ok) throw new Error();
+            const data = await res.json();
+            loginLimitBanner.style.display = 'block';
+            const percent = Math.min((data.count / data.limit) * 100, 100);
+            limitBarProgress.style.width = `${percent}%`;
+            if (data.limitReached) {
+                loginBtn.disabled = true;
+                limitStatusText.innerHTML = `<span class="limit-warning">Daily limit reached (${data.count}/${data.limit}).</span> Logins are paused until tomorrow to prevent automated spam and protect repository quotas.`;
+            } else {
+                loginBtn.disabled = false;
+                limitStatusText.innerHTML = `<strong>${data.count} / ${data.limit} daily logins used.</strong> Capacity is automatically refreshed daily at midnight UTC.`;
+            }
+        } catch (e) {
+            loginLimitBanner.style.display = 'none';
+        }
     }
 
     function resetUploadForm() {

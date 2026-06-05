@@ -1354,6 +1354,43 @@ footer a:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.04);
 }
 
+.limit-status-banner {
+    background: rgba(0, 0, 0, 0.02);
+    border: 1px solid var(--card-border);
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-top: 2rem;
+    text-align: left;
+}
+
+.limit-bar-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-bottom: 0.75rem;
+}
+
+.limit-bar-fill {
+    height: 100%;
+    background: var(--accent-monochrome);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.limit-text {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.4;
+    margin: 0;
+}
+
+.limit-warning {
+    color: #dc2626;
+    font-weight: 600;
+}
+
 @media (max-width: 480px) {
     .form-card, .auth-card, .status-card {
         padding: 1.5rem 1.25rem;
